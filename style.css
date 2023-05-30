@@ -57,14 +57,18 @@ body {
     border-color: #FDE2F3;
 }
 
-.play-again {
-    display: none;
+.btn-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.btn {
     cursor: pointer;
     color: #F8F1F1;
     font-size: 1rem;
     padding: 0.5rem 3rem;
-    margin-top: 10px;
-    margin: auto;
     margin-top: 0.5em;
     background-color: transparent;
     border-radius: 5px;
@@ -72,7 +76,7 @@ body {
     transition: all 300ms;
 }
 
-.play-again:hover {
+.btn:hover {
     background-color: #F8F1F1;
     transform: scale(1.1);
     color: #394867;
@@ -105,7 +109,7 @@ h4, h3 {
 
 @media (width < 800px) {
 
-    .input-quote, .play-again, .score {
+    .input-quote, .btn, .score {
         font-size: .8rem;
     }
 
@@ -116,5 +120,9 @@ h4, h3 {
     .score {
         text-align: center;
         width: 90%;
+    }
+
+    .btn {
+        padding: 0.5rem 2rem;
     }
 }

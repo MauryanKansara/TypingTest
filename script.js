@@ -3,6 +3,7 @@ const quoteDisplay = document.getElementById('quoteDisplay');
 const quoteInput = document.getElementById('inputQuote');
 const timer = document.getElementById('timer');
 const playAgain = document.getElementById('playAgain');
+const stop = document.getElementById('stop');
 const score = document.getElementById('score');
 
 let previousLength = quoteInput.value;
@@ -14,24 +15,8 @@ let correctCharacters = 0;
 let quote, currentLength, quoteLength, startTime, arrayQuote, mistakes, speed, accuracy;
 
 quoteInput.addEventListener('input',(e) => {
-  if(inputLength >= quoteLength){
-    const quoteValue = quoteInput.value.trim();
-    quoteInput.disabled = true;
-    quoteInput.value = quoteValue;
-    playAgain.style.display = 'block';
-    firstCall = true;
-    accuracy = calculateAccuracy(correctCharacters, arrayQuote.length);
-    speed = calculateSpeed(quoteValue.length, parseInt(timer.innerText));
-    const displayScore = `<div class = "scores">
-                  <strong>Speed: ${speed}WPM</strong>
-                  &emsp; &emsp;
-                  <strong>Accuracy: ${accuracy}%</strong>
-                  &emsp; &emsp;
-                  <strong>Mistakes: ${mistakes}</strong>
-                  </div>
-                  <h3>${highestScore()}</h3>
-                  `;
-    score.innerHTML = displayScore;
+  if(inputLength >= quoteLength) {
+  inputTaken();
     return;
   }
   if(firstCall) {
@@ -105,6 +90,10 @@ async function getQuoteFromAPI() {
     getQuoteFromAPI();
   })
 
+  stop.addEventListener('click', () => {
+    inputTaken();
+  })
+
   function calculateAccuracy(correctCharacters, quoteLength){
     mistakes = quoteDisplay.querySelectorAll('.incorrect').length;
 
@@ -130,6 +119,28 @@ async function getQuoteFromAPI() {
     } else {
       return `Your current highest score is: ${storedScore}WPM with ${storedAccuracy} accuracy & ${storedMistakes} mistakes`;
     }
+  }
+
+
+  // Helper function, gets called when user has clicked the stop button or when the textarea's input length > quote length.
+  function inputTaken(){
+    const quoteValue = quoteInput.value.trim();
+    quoteInput.disabled = true;
+    quoteInput.value = quoteValue;
+    playAgain.style.display = 'block';
+    firstCall = true;
+    accuracy = calculateAccuracy(correctCharacters, arrayQuote.length);
+    speed = calculateSpeed(quoteValue.length, parseInt(timer.innerText));
+    const displayScore = `<div class = "scores">
+                  <strong>Speed: ${speed}WPM</strong>
+                  &emsp; &emsp;
+                  <strong>Accuracy: ${accuracy}%</strong>
+                  &emsp; &emsp;
+                  <strong>Mistakes: ${mistakes}</strong>
+                  </div>
+                  <h3>${highestScore()}</h3>
+                  `;
+    score.innerHTML = displayScore;
   }
 
 getQuoteFromAPI();
