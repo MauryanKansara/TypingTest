@@ -1,4 +1,4 @@
-const apiUrl = "https://api.quotable.io/random";
+const apiUrl = "https://api.quotable.io/random?minLength=70&maxLength=140";
 const quoteDisplay = document.getElementById('quoteDisplay');
 const quoteInput = document.getElementById('inputQuote');
 const timer = document.getElementById('timer');
@@ -126,7 +126,7 @@ async function getQuoteFromAPI() {
       localStorage.setItem('highestScore', speed);
       localStorage.setItem('mistakes', mistakes);
       localStorage.setItem('accuracy', accuracy);
-      return `Congratulations, your new highest score is: ${speed}WPM with ${storedMistakes} accuracy & ${mistakes} mistakes`;
+      return `Congratulations, your new highest score is: ${speed}WPM with ${accuracy} accuracy & ${mistakes} mistakes`;
     } else {
       return `Your current highest score is: ${storedScore}WPM with ${storedAccuracy} accuracy & ${storedMistakes} mistakes`;
     }
