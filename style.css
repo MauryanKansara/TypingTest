@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #F79327;
+    color: #F8F1F1;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.timer {
+    position: absolute;
+    font-size: 4rem;
+    font-weight: bold;
+    top: 1rem;
+}
+
+.container {
+    width: 900px;
+    max-width: 90%;
+    padding: 1em;
+    padding-bottom: 0.7em;
+    border-radius: 10px;
+    background-color: #394867;
+    box-shadow: 0px 10px 29px 7px rgba(0,0,0,0.2);
+}
+
+.quote-display {
+    margin-bottom: 1rem;
+    margin-left: calc(1rem + 2px);
+    margin-right: calc(1rem + 2px);
+}
+
+.input-quote {
+    font-family: 'Poppins', sans-serif;
+    resize: none;
+    margin: auto;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    height: 8rem;
+    font-size: 1rem;
+    color: #F8F1F1;
+    border: 2px solid #a8a8a8;
+    border-radius: .4rem;
+    background-color: transparent;
+    outline: none;
+}
+
+.input-quote:focus {
+    border-color: #FDE2F3;
+}
+
+.play-again {
+    display: none;
+    cursor: pointer;
+    color: #F8F1F1;
+    font-size: 1rem;
+    padding: 0.5rem 3rem;
+    margin-top: 10px;
+    margin: auto;
+    margin-top: 0.5em;
+    background-color: transparent;
+    border-radius: 5px;
+    border: 1px solid #F8F1F1;
+    transition: all 300ms;
+}
+
+.play-again:hover {
+    background-color: #F8F1F1;
+    transform: scale(1.1);
+    color: #394867;
+    border-radius: 3px;
+}
+
+.score {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: absolute;
+    line-height: 1.7;
+    bottom: 4rem;
+}
+
+h4, h3 {
+    margin: 0;
+}
+
+.correct {
+    color: yellowgreen;
+}
+
+.incorrect {
+    color: red;
+    text-decoration: underline;
+}
+
+
+@media (width < 800px) {
+
+    .input-quote, .play-again, .score {
+        font-size: .8rem;
+    }
+
+    .timer {
+        font-size: 3rem;
+    }
+
+    .score {
+        text-align: center;
+        width: 90%;
+    }
+}
