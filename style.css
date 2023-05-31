@@ -118,6 +118,8 @@ h4, h3 {
     }
 
     .score {
+        bottom: 1.5rem;
+        font-size: .7rem;
         text-align: center;
         width: 90%;
     }

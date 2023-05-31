@@ -2,8 +2,7 @@ const apiUrl = "https://api.quotable.io/random?minLength=70&maxLength=140";
 const quoteDisplay = document.getElementById('quoteDisplay');
 const quoteInput = document.getElementById('inputQuote');
 const timer = document.getElementById('timer');
-const playAgain = document.getElementById('playAgain');
-const stop = document.getElementById('stop');
+const button = document.getElementById('btn');
 const score = document.getElementById('score');
 
 let previousLength = quoteInput.value;
@@ -14,12 +13,15 @@ let correctCharacters = 0;
 
 let quote, currentLength, quoteLength, startTime, arrayQuote, mistakes, speed, accuracy;
 
-quoteInput.addEventListener('input',(e) => {
-  if(inputLength >= quoteLength) {
-  inputTaken();
+quoteInput.addEventListener('input', (e) => {
+
+  if (inputLength >= quoteLength) {
+    button.value = "Start"
+    inputTaken();
     return;
   }
-  if(firstCall) {
+  if (firstCall) {
+    button.value = 'Stop';
     stopTimer = false;
     firstCall = false;
     startTimer();
@@ -29,11 +31,11 @@ quoteInput.addEventListener('input',(e) => {
   currentLength = e.target.value;
 
   arrayQuote.forEach((characterSpan, index) => {
-    if(inputValues[index] == null) {
+    if (inputValues[index] == null) {
       characterSpan.classList.remove('correct')
       characterSpan.classList.remove('incorrect')
     }
-    else if(characterSpan.innerText === inputValues[index]){
+    else if (characterSpan.innerText === inputValues[index]) {
       characterSpan.classList.add('correct')
       characterSpan.classList.remove('incorrect')
     } else {
@@ -42,8 +44,8 @@ quoteInput.addEventListener('input',(e) => {
     }
   })
 
-  if(previousLength.length > currentLength.length) { // check if the key pressed was backspace or not.
-   inputLength--;
+  if (previousLength.length > currentLength.length) { // check if the key pressed was backspace or not.
+    inputLength--;
   } else {
     inputLength++;
   }
@@ -52,34 +54,38 @@ quoteInput.addEventListener('input',(e) => {
 
 async function getQuoteFromAPI() {
   quoteDisplay.innerText = "Loading...";
-    try {
-      const response = await fetch(apiUrl);
-      quote = await response.json();
-      quoteLength = quote.content.length;
-      quoteDisplay.innerText = "";
-      quote.content.split('').forEach(character => {
-        const characterSpan = document.createElement('span');
-        characterSpan.innerText = character;
-        quoteDisplay.appendChild(characterSpan);
-      });
-      quoteInput.value = null;
-    } catch (error) {}
-  }
+  try {
+    const response = await fetch(apiUrl);
+    quote = await response.json();
+    quoteLength = quote.content.length;
+    quoteDisplay.innerText = "";
+    quote.content.split('').forEach(character => {
+      const characterSpan = document.createElement('span');
+      characterSpan.innerText = character;
+      quoteDisplay.appendChild(characterSpan);
+    });
+    quoteInput.value = null;
+  } catch (error) { }
+}
 
-  function startTimer() {
-    timer.innerText = 0
-    startTime = new Date()
-    setInterval(() => {
-      if(quoteInput.disabled || stopTimer) return;
-      timer.innerText = getTimerTime()
-    }, 1000)
-  }
+function startTimer() {
+  timer.innerText = 0
+  startTime = new Date()
+  setInterval(() => {
+    if (quoteInput.disabled || stopTimer) return;
+    timer.innerText = getTimerTime()
+  }, 1000)
+}
 
-  function getTimerTime() {
-    return Math.floor((new Date() - startTime) / 1000)
-  }
+function getTimerTime() {
+  return Math.floor((new Date() - startTime) / 1000)
+}
 
-  playAgain.addEventListener('click', () => {
+
+button.addEventListener('click', () => {
+  if (inputLength === 0) return;
+
+  if (button.value === 'Start') {
     firstCall = true;
     timer.innerText = 0;
     quoteInput.disabled = false;
@@ -87,51 +93,60 @@ async function getQuoteFromAPI() {
     quoteDisplay.innerText = '';
     stopTimer = true;
     inputLength = 0;
+    button.value = 'Stop'
     getQuoteFromAPI();
-  })
-
-  stop.addEventListener('click', () => {
+  } else {
+    button.value = 'Start';
     inputTaken();
-  })
-
-  function calculateAccuracy(correctCharacters, quoteLength){
-    mistakes = quoteDisplay.querySelectorAll('.incorrect').length;
-
-    return (((quoteInput.value.length - mistakes) / quoteInput.value.length) * 100).toFixed(2);
   }
+})
 
-  function calculateSpeed(userInput, timeTaken){
-    let totalWords = userInput / 5;
-    let wpm = totalWords / (timeTaken / 60);
-    return Math.round(wpm);
+function calculateAccuracy(correctCharacters, quoteLength) {
+  mistakes = quoteDisplay.querySelectorAll('.incorrect').length;
+
+  return (((quoteInput.value.length - mistakes) / quoteInput.value.length) * 100).toFixed(2);
+}
+
+function calculateSpeed(userInput, timeTaken) {
+  let totalWords = userInput / 5;
+  let wpm = totalWords / (timeTaken / 60);
+  return Math.round(wpm);
+}
+
+function highestScore() {
+  const storedScore = parseInt(localStorage.getItem('highestScore'));
+  const storedAccuracy = parseInt(localStorage.getItem('accuracy'));
+  const storedMistakes = parseInt(localStorage.getItem('mistakes'));
+
+  if (storedScore === null || isNaN(storedScore)) { // The values of previous high score is not stored... maybe user is visiting the site for the first time or has cleared the localStorage.
+    localStorage.setItem('highestScore', speed);
+    localStorage.setItem('mistakes', mistakes);
+    localStorage.setItem('accuracy', accuracy);
+
+    return `Your current highest score is: ${storedScore}WPM with ${storedAccuracy} accuracy & ${storedMistakes} mistakes`;
   }
+  else if (speed && accuracy > storedScore && storedAccuracy) { // if current score is higher than previous high score
+    localStorage.setItem('highestScore', speed);
+    localStorage.setItem('mistakes', mistakes);
+    localStorage.setItem('accuracy', accuracy);
 
-  function highestScore(){
-    const storedScore = localStorage.getItem('highestScore');
-    const storedAccuracy = localStorage.getItem('highestScore');
-    const storedMistakes = localStorage.getItem('mistakes');
-
-    if(speed && accuracy > storedScore && storedAccuracy){
-      localStorage.setItem('highestScore', speed);
-      localStorage.setItem('mistakes', mistakes);
-      localStorage.setItem('accuracy', accuracy);
-      return `Congratulations, your new highest score is: ${speed}WPM with ${accuracy} accuracy & ${mistakes} mistakes`;
-    } else {
-      return `Your current highest score is: ${storedScore}WPM with ${storedAccuracy} accuracy & ${storedMistakes} mistakes`;
-    }
+    return `Congratulations, your new highest score is: ${speed}WPM with ${accuracy} accuracy & ${mistakes} mistakes`;
   }
+  else { // if current score is less than previous high score
+    return `Your current highest score is: ${storedScore}WPM with ${storedAccuracy} accuracy & ${storedMistakes} mistakes`;
+  }
+}
 
 
-  // Helper function, gets called when user has clicked the stop button or when the textarea's input length > quote length.
-  function inputTaken(){
-    const quoteValue = quoteInput.value.trim();
-    quoteInput.disabled = true;
-    quoteInput.value = quoteValue;
-    playAgain.style.display = 'block';
-    firstCall = true;
-    accuracy = calculateAccuracy(correctCharacters, arrayQuote.length);
-    speed = calculateSpeed(quoteValue.length, parseInt(timer.innerText));
-    const displayScore = `<div class = "scores">
+// Helper function, gets called when user has clicked the stop button or when the textarea's input length > quote length.
+function inputTaken() {
+  const quoteValue = quoteInput.value.trim();
+  quoteInput.disabled = true;
+  quoteInput.value = quoteValue;
+  firstCall = true;
+  accuracy = calculateAccuracy(correctCharacters, arrayQuote.length);
+  speed = calculateSpeed(quoteValue.length, parseInt(timer.innerText));
+  const displayScore = `<div class = "scores">
                   <strong>Speed: ${speed}WPM</strong>
                   &emsp; &emsp;
                   <strong>Accuracy: ${accuracy}%</strong>
@@ -140,7 +155,7 @@ async function getQuoteFromAPI() {
                   </div>
                   <h3>${highestScore()}</h3>
                   `;
-    score.innerHTML = displayScore;
-  }
+  score.innerHTML = displayScore;
+}
 
 getQuoteFromAPI();
