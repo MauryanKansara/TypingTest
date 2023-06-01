@@ -129,7 +129,7 @@ function highestScore() {
 
     return `Congratulations, your new highest score is: ${speed}WPM with ${accuracy} accuracy & ${mistakes} mistakes`;
   }
-  else if (speed && accuracy > storedScore && storedAccuracy) { // if current score is higher than previous high score
+  else if (accuracy > storedAccuracy) { // if current score is higher than previous high score
     localStorage.setItem('highestScore', speed);
     localStorage.setItem('mistakes', mistakes);
     localStorage.setItem('accuracy', accuracy);
