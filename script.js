@@ -109,8 +109,12 @@ function calculateAccuracy(correctCharacters, quoteLength) {
 
 function calculateSpeed(userInput, timeTaken) {
   let totalWords = userInput / 5;
-  let wpm = totalWords / (timeTaken / 60);
-  return Math.round(wpm);
+  let wpm = Math.round(totalWords / (timeTaken / 60));
+
+  if (wpm > 0)
+    return wpm;
+  else
+    return 0;
 }
 
 function highestScore() {
