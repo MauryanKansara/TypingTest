@@ -117,31 +117,6 @@ function calculateSpeed(userInput, timeTaken) {
     return 0;
 }
 
-function highestScore() {
-  const storedScore = parseInt(localStorage.getItem('highestScore'));
-  const storedAccuracy = parseInt(localStorage.getItem('accuracy'));
-  const storedMistakes = parseInt(localStorage.getItem('mistakes'));
-
-  if (storedScore === null || isNaN(storedScore)) { // The values of previous high score is not stored... maybe user is visiting the site for the first time or has cleared the localStorage.
-    localStorage.setItem('highestScore', speed);
-    localStorage.setItem('mistakes', mistakes);
-    localStorage.setItem('accuracy', accuracy);
-
-    return `Congratulations, your new highest score is: ${speed}WPM with ${accuracy} accuracy & ${mistakes} mistakes`;
-  }
-  else if (accuracy > storedAccuracy) { // if current score is higher than previous high score
-    localStorage.setItem('highestScore', speed);
-    localStorage.setItem('mistakes', mistakes);
-    localStorage.setItem('accuracy', accuracy);
-
-    return `Congratulations, your new highest score is: ${speed}WPM with ${accuracy} accuracy & ${mistakes} mistakes`;
-  }
-  else { // if current score is less than previous high score
-    return `Your current highest score is: ${storedScore}WPM with ${storedAccuracy} accuracy & ${storedMistakes} mistakes`;
-  }
-}
-
-
 // Helper function, gets called when user has clicked the stop button or when the textarea's input length > quote length.
 function inputTaken() {
   const quoteValue = quoteInput.value.trim();
@@ -160,6 +135,30 @@ function inputTaken() {
                   <h3>${highestScore()}</h3>
                   `;
   score.innerHTML = displayScore;
+}
+
+function highestScore() {
+  const storedScore = parseInt(localStorage.getItem('highestScore'));
+  const storedAccuracy = parseInt(localStorage.getItem('accuracy'));
+  const storedMistakes = parseInt(localStorage.getItem('mistakes'));
+
+  if (storedScore === null || isNaN(storedScore)) { // The values of previous high score is not stored... maybe user is visiting the site for the first time or has cleared the localStorage.
+    localStorage.setItem('highestScore', speed);
+    localStorage.setItem('mistakes', mistakes);
+    localStorage.setItem('accuracy', accuracy);
+
+    return `Congratulations, your new highest score is: ${speed}WPM with ${accuracy} accuracy & ${mistakes} mistakes`;
+  }
+  else if ((accuracy && speed) >= (storedAccuracy && storedScore)) { // if current score is higher than previous high score
+    localStorage.setItem('highestScore', speed);
+    localStorage.setItem('mistakes', mistakes);
+    localStorage.setItem('accuracy', accuracy);
+
+    return `Congratulations, your new highest score is: ${speed}WPM with ${accuracy} accuracy & ${mistakes} mistakes`;
+  }
+  else { // if current score is less than previous high score
+    return `Your current highest score is: ${storedScore}WPM with ${storedAccuracy} accuracy & ${storedMistakes} mistakes`;
+  }
 }
 
 getQuoteFromAPI();
